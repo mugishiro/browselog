@@ -5,6 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build outputs
+dist/
 dist/*.js.map
 dist/*.d.ts
 dist/*.d.ts.map
