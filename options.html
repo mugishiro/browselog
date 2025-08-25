@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Browsing Log - Analytics</title>
+        <link rel="stylesheet" href="dist/options.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Browsing Log Analytics</h1>
+
+            <!-- Integrated Data Section -->
+            <div class="data-section">
+                <!-- Main Tabs -->
+                <div class="main-tabs">
+                    <div class="tab-buttons">
+                        <button class="main-tab active" data-tab="history">Visit History</button>
+                        <button class="main-tab" data-tab="domain">By Domain</button>
+                        <button class="main-tab" data-tab="daily">Daily Trends</button>
+                        <button class="main-tab" data-tab="hourly">By Hour</button>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="exportData" class="action-btn export-btn">Export</button>
+                        <button id="deleteData" class="action-btn delete-btn">Delete</button>
+                    </div>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Visit History Tab -->
+                    <div class="tab-panel active" id="historyPanel">
+                        <!-- Search Controls -->
+                        <div class="chart-controls">
+                            <div class="left-controls">
+                                <label for="historyPeriod">Period:</label>
+                                <select id="historyPeriod">
+                                    <option value="7" selected>Past 7 days</option>
+                                    <option value="30">Past 30 days</option>
+                                    <option value="90">Past 90 days</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+
+                                <div id="customDateRangeHistory" style="display: none">
+                                    <label for="historyStartDate">Start:</label>
+                                    <input type="date" id="historyStartDate" />
+                                    <label for="historyEndDate">End:</label>
+                                    <input type="date" id="historyEndDate" />
+                                </div>
+
+                                <button
+                                    id="updateHistory"
+                                    class="refresh-button"
+                                    title="Update History"
+                                >
+                                    ↻
+                                </button>
+                            </div>
+
+                            <div class="right-controls">
+                                <input
+                                    id="q"
+                                    placeholder="Keyword search (e.g., github, stackoverflow)"
+                                />
+                                <button id="deleteSelected" class="action-btn delete-btn" disabled>
+                                    Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Table Display -->
+                        <div class="table-container">
+                            <table class="history-table" id="historyTable">
+                                <thead>
+                                    <tr>
+                                        <th class="action-header"></th>
+                                        <th class="sortable" data-sort="lastVisitedAt">
+                                            Last Visited Time
+                                            <span class="sort-icon">↕</span>
+                                        </th>
+                                        <th>Title</th>
+                                        <th class="sortable" data-sort="totalDwellTime">
+                                            Dwell Time
+                                            <span class="sort-icon">↕</span>
+                                        </th>
+                                        <th class="sortable" data-sort="totalVisits">
+                                            Visit Count
+                                            <span class="sort-icon">↕</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Data will be dynamically added here -->
+                                </tbody>
+                            </table>
+
+                            <!-- Pagination Controls -->
+                            <div class="pagination-controls">
+                                <div class="pagination-info">
+                                    <span id="paginationInfo">Showing: 0-0 / 0 items</span>
+                                </div>
+                                <div class="pagination-buttons">
+                                    <button id="firstPage" class="pagination-btn" disabled>
+                                        First
+                                    </button>
+                                    <button id="prevPage" class="pagination-btn" disabled>
+                                        Previous
+                                    </button>
+                                    <span id="pageNumbers" class="page-numbers"></span>
+                                    <button id="nextPage" class="pagination-btn" disabled>
+                                        Next
+                                    </button>
+                                    <button id="lastPage" class="pagination-btn" disabled>
+                                        Last
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Legacy List Display (Hidden) -->
+                        <div class="list" id="list" style="display: none"></div>
+                    </div>
+
+                    <!-- Domain Analysis Tab -->
+                    <div class="tab-panel" id="domainPanel">
+                        <div class="chart-controls">
+                            <div class="left-controls">
+                                <label for="chartPeriodDomain">Period:</label>
+                                <select id="chartPeriodDomain">
+                                    <option value="7" selected>Past 7 days</option>
+                                    <option value="30">Past 30 days</option>
+                                    <option value="90">Past 90 days</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+
+                                <div id="customDateRangeDomain" style="display: none">
+                                    <label for="chartStartDateDomain">Start:</label>
+                                    <input type="date" id="chartStartDateDomain" />
+                                    <label for="chartEndDateDomain">End:</label>
+                                    <input type="date" id="chartEndDateDomain" />
+                                </div>
+
+                                <label for="topN">Display Count:</label>
+                                <select id="topN">
+                                    <option value="5" selected>Top 5</option>
+                                    <option value="10">Top 10</option>
+                                    <option value="30">Top 30</option>
+                                </select>
+
+                                <button
+                                    id="updateChartDomain"
+                                    class="refresh-button"
+                                    title="Update Chart"
+                                >
+                                    ↻
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="chart-loading" id="chartLoadingDomain">Loading chart...</div>
+
+                        <div class="chart-error" id="chartErrorDomain">Failed to load chart</div>
+
+                        <div class="chart-container">
+                            <canvas id="chartCanvasDomain"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Daily Trends Tab -->
+                    <div class="tab-panel" id="dailyPanel">
+                        <div class="chart-controls">
+                            <div class="left-controls">
+                                <label for="chartPeriod">Period:</label>
+                                <select id="chartPeriod">
+                                    <option value="7" selected>Past 7 days</option>
+                                    <option value="30">Past 30 days</option>
+                                    <option value="90">Past 90 days</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+
+                                <div id="customDateRange" style="display: none">
+                                    <label for="chartStartDate">Start:</label>
+                                    <input type="date" id="chartStartDate" />
+                                    <label for="chartEndDate">End:</label>
+                                    <input type="date" id="chartEndDate" />
+                                </div>
+
+                                <button
+                                    id="updateChart"
+                                    class="refresh-button"
+                                    title="Update Chart"
+                                >
+                                    ↻
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="chart-loading" id="chartLoading">Loading chart...</div>
+
+                        <div class="chart-error" id="chartError">Failed to load chart</div>
+
+                        <div class="chart-container">
+                            <canvas id="chartCanvas"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Hourly Analysis Tab -->
+                    <div class="tab-panel" id="hourlyPanel">
+                        <div class="chart-controls">
+                            <div class="left-controls">
+                                <label for="chartPeriodHourly">Period:</label>
+                                <select id="chartPeriodHourly">
+                                    <option value="7" selected>Past 7 days</option>
+                                    <option value="30">Past 30 days</option>
+                                    <option value="90">Past 90 days</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+
+                                <div id="customDateRangeHourly" style="display: none">
+                                    <label for="chartStartDateHourly">Start:</label>
+                                    <input type="date" id="chartStartDateHourly" />
+                                    <label for="chartEndDateHourly">End:</label>
+                                    <input type="date" id="chartEndDateHourly" />
+                                </div>
+
+                                <button
+                                    id="updateChartHourly"
+                                    class="refresh-button"
+                                    title="Update Chart"
+                                >
+                                    ↻
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="chart-loading" id="chartLoadingHourly">Loading chart...</div>
+
+                        <div class="chart-error" id="chartErrorHourly">Failed to load chart</div>
+
+                        <div class="chart-container">
+                            <canvas id="chartCanvasHourly"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Settings (Hidden) -->
+            <div id="exportSettings" style="display: none">
+                <div class="export-controls">
+                    <label for="fromExport">Start Date:</label>
+                    <input type="date" id="fromExport" />
+                    <label for="toExport">End Date:</label>
+                    <input type="date" id="toExport" />
+                    <label for="exportFormat">Format:</label>
+                    <select id="exportFormat">
+                        <option value="json">JSON</option>
+                        <option value="csv" selected>CSV</option>
+                        <option value="excel">Excel</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="dist/vendors.js"></script>
+        <script type="module" src="dist/options.js"></script>
+    </body>
+</html>

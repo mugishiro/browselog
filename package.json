@@ -1,0 +1,48 @@
+{
+    "name": "browselog",
+    "version": "1.0.0",
+    "description": "Privacy-focused browsing activity tracker with local data storage and detailed analytics",
+    "main": "dist/background.js",
+    "type": "module",
+    "scripts": {
+        "build": "webpack && npm run copy-css",
+        "watch": "webpack --watch",
+        "dev": "npm run build && npm run watch",
+        "clean": "rm -rf dist",
+        "copy-css": "powershell -Command \"Copy-Item 'src/ui/options.css' 'dist/options.css' -Force\"",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "format": "prettier --write src/**/*.ts",
+        "format:check": "prettier --check src/**/*.ts",
+        "check": "npm run lint && npm run format:check"
+    },
+    "dependencies": {
+        "chart.js": "^4.4.0"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.254",
+        "@types/node": "^24.3.0",
+        "@typescript-eslint/eslint-plugin": "^8.40.0",
+        "@typescript-eslint/parser": "^8.40.0",
+        "css-loader": "^7.1.2",
+        "eslint": "^9.33.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "mini-css-extract-plugin": "^2.9.4",
+        "prettier": "^3.6.2",
+        "style-loader": "^4.0.0",
+        "ts-loader": "^9.5.2",
+        "typescript": "^5.0.0",
+        "webpack": "^5.101.3",
+        "webpack-bundle-analyzer": "^4.10.2",
+        "webpack-cli": "^6.0.1"
+    },
+    "keywords": [
+        "chrome-extension",
+        "browsing-log",
+        "privacy",
+        "analytics"
+    ],
+    "author": "",
+    "license": "MIT"
+}

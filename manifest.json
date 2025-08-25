@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "Browsing Log",
+    "version": "1.0.0",
+    "description": "Privacy-focused browsing activity tracker with local data storage and detailed analytics.",
+    "permissions": ["storage"],
+    "host_permissions": ["<all_urls>"],
+    "background": { "service_worker": "dist/background.js" },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["dist/content.js"],
+            "run_at": "document_start"
+        }
+    ],
+    "options_page": "options.html"
+}
