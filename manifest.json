@@ -3,7 +3,6 @@
     "name": "Browsing Log",
     "version": "1.0.0",
     "description": "Single-purpose browsing activity tracker for personal productivity insights. Tracks visit time, frequency, and patterns with local data storage.",
-    "permissions": ["storage"],
     "host_permissions": [
         "http://*/*",
         "https://*/*"
