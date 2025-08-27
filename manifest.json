@@ -15,14 +15,6 @@
                 "http://*/*",
                 "https://*/*"
             ],
-            "exclude_matches": [
-                "chrome://*",
-                "chrome-extension://*",
-                "moz-extension://*",
-                "edge://*",
-                "about:*",
-                "file://*"
-            ],
             "js": ["dist/content.js"],
             "run_at": "document_start"
         }
